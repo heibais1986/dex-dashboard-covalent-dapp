@@ -1,0 +1,13 @@
+name = "dex-dashboard-covalent-dapp"
+main = ".worker-next/index.mjs"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "npm run build"
+
+[build.upload]
+dir = "out"
+
+[[build.upload.rules]]
+type = "static"
+globs = ["**/*"]
