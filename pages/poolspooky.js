@@ -30,7 +30,7 @@ import { GiToken } from "react-icons/gi";
 import { FcAbout } from "react-icons/fc";
 import { FiMenu, FiSearch } from "react-icons/fi";
 import { HiCode, HiCollection } from "react-icons/hi";
-import { Dashboard } from "@material-ui/icons";
+import { Dashboard } from "@mui/icons-material";
 import {
   MdHome,
   MdKeyboardArrowRight,

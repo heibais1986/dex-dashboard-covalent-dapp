@@ -19,26 +19,25 @@ import {
   Paper,
   TablePagination,
   TableFooter,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: 750,
-  },
-  tableContainer: {
-    borderRadius: 15,
-    margin: "10px 10px",
-    maxWidth: 1130,
-  },
-  status: {
-    fontWeight: "bold",
-    fontSize: "0.75rem",
-    borderRadius: 8,
-    padding: "3px 10px",
-    display: "inline-block",
-  },
-}));
+const tableStyles = {
+  minWidth: 750,
+};
+
+const tableContainerStyles = {
+  borderRadius: 15,
+  margin: "10px 10px",
+  maxWidth: 1130,
+};
+
+const statusStyles = {
+  fontWeight: "bold",
+  fontSize: "0.75rem",
+  borderRadius: 8,
+  padding: "3px 10px",
+  display: "inline-block",
+};
 
 import { useQuery } from "react-query";
 import EcosystemPoolSpirit from "./EcosystemPoolSpirit";
@@ -49,7 +48,6 @@ const chainID = 250;
 const dexName = "spiritswap";
 
 export default function PoolSpirit() {
-  const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -86,11 +84,11 @@ export default function PoolSpirit() {
       {" "}
       <div>
         <EcosystemPoolSpirit />
-        <TableContainer component={Paper} className={classes.tableContainer}>
+        <TableContainer component={Paper} sx={tableContainerStyles}>
           <Table
             borderColor="green.900"
             borderWidth={1}
-            className={classes.table}
+            sx={tableStyles}
             aria-label="simple table"
             bg={useColorModeValue("inherit", "gray.800")}
           >
