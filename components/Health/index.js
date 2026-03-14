@@ -10,9 +10,7 @@ import {
   Progress,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-
-// COVALENT API Key
-const APIKey = process.env.NEXT_PUBLIC_COVALENT_APIKEY;
+import { fetchCovalentData, getChainItems } from "../../utils/api";
 
 // Define a service using a base URL and expected endpoints
 const chainID = 250;
@@ -21,18 +19,22 @@ const dexName = "spookyswap";
 export default function Health() {
   // used React-Query to fetch Covalent API
   const { data, error, isFetching } = useQuery(["healths"], async () => {
-    const res = await fetch(
-      `https://api.covalenthq.com/v1/${chainID}/xy=k/${dexName}/health/?key=${APIKey}`
-    );
-    return res.json();
+    return await fetchCovalentData("health", chainID, dexName);
   });
 
-  const chainItems = data?.data?.items || []; // Fallback to empty array if undefined
+  const chainItems = getChainItems(data);
 
   if (isFetching) return <Progress size="xs" isIndeterminate />;
 
   if (error) {
-    return <span>Error: {error.message}</span>;
+    return (
+      <Box p="4" bg="red.50" borderRadius="md">
+        <Text color="red.600">Error: {error.message}</Text>
+        <Text fontSize="sm" color="red.500" mt="2">
+          Please check your API key configuration and network connection.
+        </Text>
+      </Box>
+    );
   }
 
   return (

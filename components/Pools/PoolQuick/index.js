@@ -10,6 +10,7 @@ import {
   Avatar,
   HStack,
   Progress,
+  Box,
 } from "@chakra-ui/react";
 import {
   TableBody,
@@ -42,8 +43,8 @@ const statusStyles = {
 import { useQuery } from "react-query";
 import EcosystemPoolQuick from "./EcosystemPoolQuick";
 import numbro from "numbro";
-//COVALENT API Key
-const APIKey = process.env.NEXT_PUBLIC_COVALENT_APIKEY;
+import { fetchCovalentData, getChainItems } from "../../../utils/api";
+
 const chainID = 137;
 const dexName = "quickswap";
 
@@ -53,20 +54,22 @@ export default function PoolQuick() {
 
   // used React-Query to fetch Covalent API
   const { data, error, isFetching } = useQuery(["ecosystem21"], async () => {
-    const res = await fetch(
-      `https://api.covalenthq.com/v1/${chainID}/xy=k/${dexName}/pools/?key=${APIKey}`
-    );
-    return res.json();
+    return await fetchCovalentData("pools", chainID, dexName);
   });
 
-  const chainItems = data?.data?.items;
-
-  //console.log(chainItems);
+  const chainItems = getChainItems(data);
 
   if (isFetching) return <Progress size="xs" isIndeterminate />;
 
   if (error) {
-    return <span>Error: {error.message}</span>;
+    return (
+      <Box p="4" bg="red.50" borderRadius="md">
+        <Text color="red.600">Error: {error.message}</Text>
+        <Text fontSize="sm" color="red.500" mt="2">
+          Please check your API key configuration and network connection.
+        </Text>
+      </Box>
+    );
   }
 
   const handleChangePage = (event, newPage) => {

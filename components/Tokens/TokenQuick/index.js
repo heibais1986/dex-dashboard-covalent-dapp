@@ -8,6 +8,7 @@ import {
   Text,
   useColorModeValue,
   Progress,
+  Box,
 } from "@chakra-ui/react";
 import {
   TableBody,
@@ -18,6 +19,10 @@ import {
   TablePagination,
   TableFooter,
 } from "@mui/material";
+import { useQuery } from "react-query";
+import EcosystemTokenQuick from "./EcosystemTokenQuick";
+import numbro from "numbro";
+import { fetchCovalentData, getChainItems } from "../../../utils/api";
 
 const tableStyles = {
   minWidth: 750,
@@ -37,11 +42,6 @@ const statusStyles = {
   display: "inline-block",
 };
 
-import { useQuery } from "react-query";
-import EcosystemTokenQuick from "./EcosystemTokenQuick";
-import numbro from "numbro";
-//COVALENT API Key
-const APIKey = process.env.NEXT_PUBLIC_COVALENT_APIKEY;
 const chainID = 137;
 const dexName = "quickswap";
 
@@ -51,20 +51,24 @@ export default function TokenQuick() {
 
   // used React-Query to fetch Covalent API
   const { data, error, isFetching } = useQuery(["ecosystem32"], async () => {
-    const res = await fetch(
-      `https://api.covalenthq.com/v1/${chainID}/xy=k/${dexName}/tokens/?key=${APIKey}`
-    );
-    return res.json();
+    return await fetchCovalentData("tokens", chainID, dexName);
   });
 
-  const chainItems = data?.data?.items;
+  const chainItems = data?.data?.items || [];
 
   //console.log(chainItems);
 
   if (isFetching) return <Progress size="xs" isIndeterminate />;
 
   if (error) {
-    return <span>Error: {error.message}</span>;
+    return (
+      <Box p="4" bg="red.50" borderRadius="md">
+        <Text color="red.600">Error: {error.message}</Text>
+        <Text fontSize="sm" color="red.500" mt="2">
+          Please check your API key configuration and network connection.
+        </Text>
+      </Box>
+    );
   }
 
   const handleChangePage = (event, newPage) => {
